@@ -31,6 +31,26 @@ pipeline{
                 }
             }
         }
+	    stage("Publish to Artifactory"){
+            steps{
+                rtMavenDeployer(
+                    id: 'deployer',
+                    serverId: '3154027@artifactory',
+                    releaseRepo: 'sonal.testrepo',
+                    snapshotRepo: 'sonal.testrepo'
+                )
+                rtMavenRun(
+                    pom: 'pom.xml',
+                    goals: 'clean install',
+                    deployerId: 'deployer'
+                    )
+                rtPublishBuildInfo(
+                    serverId:'3154027@artifactory',
+                )
+            }        
+        }
+ 
+    }
  
     }
     post{
